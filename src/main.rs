@@ -1,4 +1,7 @@
-use std::char::MAX;
+mod vec3;
+mod ray;
+use vec3::Vec3;
+use ray::Ray;
 
 fn main() {
     // Image
