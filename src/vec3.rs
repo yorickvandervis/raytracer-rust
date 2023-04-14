@@ -1,6 +1,6 @@
 use std::ops;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct Vec3 {
     e: [f32; 3],
 }
@@ -12,16 +12,16 @@ impl Vec3 {
     }
 }
 
-// Overwrite addition operator to add Vec3 together
+// Overwrite addition/division/multiply operators
 impl ops::Add for Vec3 {
     type Output = Self;
 
-    fn add(self, right_hand_side: Vec3) -> Self::Output {
+    fn add(self, rhs: Vec3) -> Self::Output {
         Vec3 {
             e: [
-                self.e[0] + right_hand_side.e[0],
-                self.e[1] + right_hand_side.e[1],
-                self.e[2] + right_hand_side.e[2],
+                self.e[0] + rhs.e[0],
+                self.e[1] + rhs.e[1],
+                self.e[2] + rhs.e[2],
             ],
         }
     }
@@ -30,9 +30,21 @@ impl ops::Add for Vec3 {
 impl ops::Mul<f32> for Vec3 {
     type Output = Self;
 
-    fn mul(self, right_hand_side: f32) -> Self::Output {
+    fn mul(self, rhs: f32) -> Self::Output {
         Vec3 {
-            e: [self.e[0] * right_hand_side, self.e[1] * right_hand_side, self.e[2] * right_hand_side],
+            e: [self.e[0] * rhs, self.e[1] * rhs, self.e[2] * rhs],
+        }
+    }
+}
+
+impl ops::Div<f32> for Vec3 {
+    type Output = Self;
+
+    fn div(self, rhs: f32) -> Self::Output {
+        let k = 1.0 / rhs;
+
+        Vec3 {
+            e: [self.e[0] * k, self.e[1] * k, self.e[2] * k],
         }
     }
 }
@@ -43,10 +55,20 @@ mod tests{
     use super::*;
 
     #[test]
-    fn test_vec3_add() {}
+    fn test_vec3_add() {
+        assert_eq!(
+            Vec3::new(3.5, 4.1, 5.7) + Vec3::new(1.5, 1.6, 5.2),
+            Vec3::new(5.0, 5.7, 10.9)
+        )
+    }
 
     #[test]
-    fn test_vec3_multiply() {}
+    fn test_vec3_multiply() {
+        assert_eq!(
+            Vec3::new(2.0, 4.0, 6.0) * 2.0,
+            Vec3::new(4.0, 8.0, 12.0)
+        )
+    }
 
     #[test]
     fn test_vec3_division() {}
