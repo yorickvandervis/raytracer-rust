@@ -1,9 +1,14 @@
+use std::fmt;
+use std::fmt::Display;
 use std::ops;
 
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub struct Vec3 {
     e: [f64; 3],
 }
+
+pub type Point3 = Vec3;
+pub type Color = Vec3;
 
 // Constructor
 impl Vec3 {
@@ -44,7 +49,11 @@ impl ops::Add for Vec3 {
 impl ops::AddAssign for Vec3 {
     fn add_assign(&mut self, rhs: Vec3) -> () {
         Vec3 {
-            e: [self.e[0] + rhs.e[0], self.e[1] + rhs.e[1], self.e[2] + rhs.e[2]]
+            e: [
+                self.e[0] + rhs.e[0],
+                self.e[1] + rhs.e[1],
+                self.e[2] + rhs.e[2],
+            ],
         };
     }
 }
@@ -52,7 +61,7 @@ impl ops::AddAssign for Vec3 {
 impl ops::MulAssign<f64> for Vec3 {
     fn mul_assign(&mut self, other: f64) -> () {
         *self = Vec3 {
-            e: [self[0] * other, self[1] * other, self[2] * other]
+            e: [self[0] * other, self[1] * other, self[2] * other],
         };
     }
 }
@@ -72,7 +81,7 @@ impl ops::Mul<Vec3> for f64 {
 
     fn mul(self, other: Vec3) -> Vec3 {
         Vec3 {
-            e: [self * other[0], self * other[1], self * other[2]]
+            e: [self * other[0], self * other[1], self * other[2]],
         }
     }
 }
@@ -92,7 +101,7 @@ impl ops::Div<f64> for Vec3 {
 impl ops::DivAssign<f64> for Vec3 {
     fn div_assign(&mut self, other: f64) -> () {
         *self = Vec3 {
-            e: [self[0] / other, self[1] / other, self[2] / other]
+            e: [self[0] / other, self[1] / other, self[2] / other],
         };
     }
 }
@@ -101,41 +110,55 @@ impl Vec3 {
     pub fn x(self) -> f64 {
         self[0]
     }
-    
+
     pub fn y(self) -> f64 {
         self[1]
     }
-    
+
     pub fn z(self) -> f64 {
         self[2]
     }
-    
+
     pub fn dot(self, other: Vec3) -> f64 {
         self[0] * other[0] + self[1] * other[1] + self[2] * other[2]
     }
-    
+
     pub fn length(self) -> f64 {
         self.dot(self).sqrt()
     }
-    
+
     pub fn cross(self, other: Vec3) -> Vec3 {
         Vec3 {
             e: [
                 self[1] * other[2] - self[2] * other[1],
                 self[2] * other[0] - self[0] * other[2],
-                self[0] * other[1] - self[1] * other[0]
-            ]
+                self[0] * other[1] - self[1] * other[0],
+            ],
         }
     }
-    
+
     pub fn normalized(self) -> Vec3 {
         self / self.length()
     }
+
+    pub fn format_color(self) -> String {
+        format!("{} {} {}", (255.999 * self[0]) as u64,
+                            (255.999 * self[1]) as u64,
+                            (255.999 * self[2]) as u64)
+    }
 }
+
+impl Display for Vec3 {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "({}, {}, {})", self[0], self[1], self[2])
+    }
+}
+
+
 
 // Basic test setup
 #[cfg(test)]
-mod tests{
+mod tests {
     use super::*;
 
     #[test]
@@ -148,13 +171,9 @@ mod tests{
 
     #[test]
     fn test_vec3_multiply() {
-        assert_eq!(
-            Vec3::new(2.0, 4.0, 6.0) * 2.0,
-            Vec3::new(4.0, 8.0, 12.0)
-        )
+        assert_eq!(Vec3::new(2.0, 4.0, 6.0) * 2.0, Vec3::new(4.0, 8.0, 12.0))
     }
 
     #[test]
     fn test_vec3_division() {}
-
 }
