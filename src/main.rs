@@ -14,8 +14,8 @@ fn main() {
     for j in (0..IMAGE_HEIGHT).rev() {
         for i in 0..IMAGE_WIDTH {
             let pixel_color = Color::new(
-                (i as f64) / ((IMAGE_WIDTH - 1) as f64),
-                (j as f64) / ((IMAGE_HEIGHT - 1) as f64),
+                (i as f32) / ((IMAGE_WIDTH - 1) as f32),
+                (j as f32) / ((IMAGE_HEIGHT - 1) as f32),
                 0.25,
             );
 
